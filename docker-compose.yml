@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:18
+    container_name: scraping_platform_db
+
+    environment:
+      POSTGRES_DB: scraping_platform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d scraping_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: scraping_platform_api
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: scraping_platform
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
