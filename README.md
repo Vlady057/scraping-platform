@@ -1,3 +1,4 @@
+
 # Scraping Platform
 
 [![CI](https://github.com/Vlady057/scraping-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Vlady057/scraping-platform/actions/workflows/ci.yml)
@@ -18,7 +19,7 @@ The project also includes Selenium and Playwright implementations, automated tes
 - Selenium scraper implementation
 - Playwright scraper implementation
 - Automated tests with Pytest
-- Continuous integration with GitHub Actions
+- Continuous Integration with GitHub Actions
 - Dockerized FastAPI application
 - Dockerized PostgreSQL database
 - Environment-based database configuration
@@ -67,7 +68,7 @@ Playwright ──────┤
 | Selenium       | Browser automation           |
 | Playwright     | Browser automation           |
 | Pytest         | Automated testing            |
-| GitHub Actions | Continuous integration       |
+| GitHub Actions | Continuous Integration       |
 | Docker         | Application containerization |
 | Docker Compose | Multi-container environment  |
 | python-dotenv  | Environment variables        |
@@ -124,13 +125,13 @@ python -m venv .venv
 
 Install dependencies:
 
-```powershell
+```bash
 pip install -r requirements.txt
 ```
 
 Install Playwright Chromium:
 
-```powershell
+```bash
 playwright install chromium
 ```
 
@@ -138,7 +139,7 @@ playwright install chromium
 
 Create a `.env` file in the project root:
 
-```env
+```dotenv
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=scraping_platform
@@ -156,7 +157,7 @@ Make sure Docker Desktop is running.
 
 Build and start the containers:
 
-```powershell
+```bash
 docker compose up --build -d
 ```
 
@@ -177,19 +178,19 @@ The PostgreSQL container is available from the host through port `5433`.
 
 Check running containers:
 
-```powershell
+```bash
 docker ps
 ```
 
 Stop the containers:
 
-```powershell
+```bash
 docker compose down
 ```
 
 To remove the PostgreSQL Docker volume as well:
 
-```powershell
+```bash
 docker compose down -v
 ```
 
@@ -338,7 +339,7 @@ The project uses Pytest for automated testing.
 
 Run all tests:
 
-```powershell
+```bash
 pytest -v
 ```
 
@@ -362,20 +363,25 @@ The tests cover:
 
 ## Continuous Integration (CI)
 
-The project uses GitHub Actions to run automated tests on every push to the `main` branch and on pull requests targeting `main`.
+The project uses GitHub Actions to run automated tests on every push and pull request to the repository.
 
-The CI workflow:
+The workflow is defined in:
+
+```text
+.github/workflows/ci.yml
+```
+
+The CI pipeline:
 
 - Sets up Python 3.13
 - Starts a PostgreSQL 16 service container
 - Installs project dependencies
-- Runs the Pytest test suite
+- Runs the automated test suite with Pytest
+- Reports the test results in GitHub Actions
 
-**Latest verified result:** 9 tests passed.
+The current CI workflow has passed all 9 tests.
 
-Workflow configuration: `.github/workflows/ci.yml`
-
-View workflow runs: [GitHub Actions](https://github.com/Vlady057/scraping-platform/actions)
+View workflow runs: [GitHub Actions](https://github.com/Vlady057/scraping-platform/actions/workflows/ci.yml)
 
 ## Docker Architecture
 
@@ -410,7 +416,7 @@ Make sure PostgreSQL is running and the `.env` file is configured.
 
 Start FastAPI:
 
-```powershell
+```bash
 uvicorn src.main:app --reload
 ```
 
