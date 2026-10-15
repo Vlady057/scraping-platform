@@ -1,24 +1,27 @@
 # Scraping Platform
 
+[![CI](https://github.com/Vlady057/scraping-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Vlady057/scraping-platform/actions/workflows/ci.yml)
+
 A Python web scraping platform that collects product data from a multi-page website, stores the results in PostgreSQL, and exposes the data through a FastAPI REST API.
 
 The project also includes Selenium and Playwright implementations, automated tests with Pytest, and Docker Compose for running the application and database in isolated containers.
 
 ## Features
 
-* Scrape product data using Requests and BeautifulSoup
-* Collect products from multiple pages
-* Remove duplicate products
-* Store scraped data in PostgreSQL
-* Automatically create the `products` table
-* Expose scraped data through FastAPI
-* Retrieve products directly from PostgreSQL
-* Selenium scraper implementation
-* Playwright scraper implementation
-* Automated tests with Pytest
-* Dockerized FastAPI application
-* Dockerized PostgreSQL database
-* Environment-based database configuration
+- Scrape product data using Requests and BeautifulSoup
+- Collect products from multiple pages
+- Remove duplicate products
+- Store scraped data in PostgreSQL
+- Automatically create the `products` table
+- Expose scraped data through FastAPI
+- Retrieve products directly from PostgreSQL
+- Selenium scraper implementation
+- Playwright scraper implementation
+- Automated tests with Pytest
+- Continuous integration with GitHub Actions
+- Dockerized FastAPI application
+- Dockerized PostgreSQL database
+- Environment-based database configuration
 
 ## Architecture
 
@@ -64,6 +67,7 @@ Playwright ──────┤
 | Selenium       | Browser automation           |
 | Playwright     | Browser automation           |
 | Pytest         | Automated testing            |
+| GitHub Actions | Continuous integration       |
 | Docker         | Application containerization |
 | Docker Compose | Multi-container environment  |
 | python-dotenv  | Environment variables        |
@@ -73,6 +77,10 @@ Playwright ──────┤
 
 ```text
 scraping-platform/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 │
 ├── src/
 │   ├── __init__.py
@@ -185,6 +193,8 @@ To remove the PostgreSQL Docker volume as well:
 docker compose down -v
 ```
 
+**Warning:** `docker compose down -v` deletes the database volume and its stored data.
+
 ## API Endpoints
 
 ### Health Check
@@ -251,7 +261,7 @@ GET /products/db
 
 Returns products stored in PostgreSQL.
 
-Example:
+Example response:
 
 ```json
 [
@@ -273,12 +283,12 @@ src/selenium_scraper.py
 
 The scraper:
 
-* launches Chrome in headless mode
-* navigates through product pages
-* extracts product names and prices
-* handles pagination
-* prevents duplicate products
-* closes the browser after scraping
+- Launches Chrome in headless mode
+- Navigates through product pages
+- Extracts product names and prices
+- Handles pagination
+- Prevents duplicate products
+- Closes the browser after scraping
 
 The Selenium implementation currently extracts 12 unique products.
 
@@ -292,12 +302,12 @@ src/playwright_scraper.py
 
 It:
 
-* launches Chromium in headless mode
-* navigates through product pages
-* extracts product information
-* handles pagination
-* removes duplicate products
-* closes the browser after scraping
+- Launches Chromium in headless mode
+- Navigates through product pages
+- Extracts product information
+- Handles pagination
+- Removes duplicate products
+- Closes the browser after scraping
 
 The Playwright implementation currently extracts 12 unique products.
 
@@ -340,36 +350,53 @@ Current test suite:
 
 The tests cover:
 
-* API health check
-* product endpoint
-* product response structure
-* database endpoint
-* database product IDs
-* scraper return type
-* scraper results
-* required product fields
-* HTML parser
+- API health check
+- Product endpoint
+- Product response structure
+- Database endpoint
+- Database product IDs
+- Scraper return type
+- Scraper results
+- Required product fields
+- HTML parser
+
+## Continuous Integration (CI)
+
+The project uses GitHub Actions to run automated tests on every push to the `main` branch and on pull requests targeting `main`.
+
+The CI workflow:
+
+- Sets up Python 3.13
+- Starts a PostgreSQL 16 service container
+- Installs project dependencies
+- Runs the Pytest test suite
+
+**Latest verified result:** 9 tests passed.
+
+Workflow configuration: `.github/workflows/ci.yml`
+
+View workflow runs: [GitHub Actions](https://github.com/Vlady057/scraping-platform/actions)
 
 ## Docker Architecture
 
 ```text
 ┌──────────────────────────────┐
-│        FastAPI Container     │
+│       FastAPI Container      │
 │                              │
 │  scraper → database → API    │
 │                              │
-│        Port 8000             │
+│         Port 8000            │
 └──────────────┬───────────────┘
                │
                │ Docker Network
                ▼
 ┌──────────────────────────────┐
-│      PostgreSQL Container    │
+│     PostgreSQL Container     │
 │                              │
-│         Database             │
+│          Database            │
 │      scraping_platform       │
 │                              │
-│        Port 5432             │
+│         Port 5432            │
 └──────────────────────────────┘
 ```
 
